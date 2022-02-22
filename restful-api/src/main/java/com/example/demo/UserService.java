@@ -18,4 +18,6 @@ public interface UserService {
     public UserDto createUser(CreateUserReq req);
 
     public UserDto updateUser(UpdateUserReq req, int id);
+
+    public boolean deleteUser(int id);
 }
