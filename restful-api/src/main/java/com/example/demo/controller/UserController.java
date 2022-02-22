@@ -22,6 +22,12 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUser(@RequestParam(required = false, defaultValue = "") String keyword) {
+        List<UserDto> users = userService.searchUser(keyword);
+        return ResponseEntity.ok(users);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable int id) {
         UserDto result = userService.getUserById(id);
