@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.entity.User;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.mapper.UserMapper;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        return null;
+        throw new NotFoundException("User not existed.");
     }
 
     @Override
