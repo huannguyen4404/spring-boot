@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.model.dto.UserDto;
+import com.example.demo.model.request.CreateUserReq;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface UserService {
     public UserDto getUserById(int id);
 
     public List<UserDto> searchUser(String keyword);
+
+    public UserDto createUser(CreateUserReq req);
 }

@@ -1,9 +1,11 @@
 package com.example.demo;
 
 import com.example.demo.entity.User;
+import com.example.demo.exception.DuplicateRecordException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.mapper.UserMapper;
+import com.example.demo.model.request.CreateUserReq;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -50,5 +52,25 @@ public class UserServiceImpl implements UserService {
             }
         }
         return result;
+    }
+
+    @Override
+    public UserDto createUser(CreateUserReq req) {
+        for (User user : users) {
+            if (user.getEmail().equals(req.getEmail())) {
+                throw new DuplicateRecordException("Email existed already.");
+            }
+        }
+
+        User user = new User();
+        user.setId(users.size() + 1);
+        user.setEmail(req.getEmail());
+        user.setName(req.getName());
+        user.setPhone(req.getPhone());
+        user.setPassword(req.getPassword());
+
+        users.add(user);
+
+        return UserMapper.toUserDto(user);
     }
 }
