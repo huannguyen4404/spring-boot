@@ -6,6 +6,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.mapper.UserMapper;
 import com.example.demo.model.request.CreateUserReq;
+import com.example.demo.model.request.UpdateUserReq;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -72,5 +73,31 @@ public class UserServiceImpl implements UserService {
         users.add(user);
 
         return UserMapper.toUserDto(user);
+    }
+
+    @Override
+    public UserDto updateUser(UpdateUserReq req, int id) {
+        for (User user : users) {
+            if (user.getId() != id) {
+                continue;
+            }
+
+            if (!user.getEmail().equals(req.getEmail())) {
+                for (User tmp : users) {
+                    if (tmp.getEmail().equals(req.getEmail())) {
+                        throw new DuplicateRecordException("Email has been existed already.");
+                    }
+                }
+                user.setEmail(req.getEmail());
+            }
+
+            user.setName(req.getName());
+            user.setPhone(req.getPhone());
+            user.setPassword(req.getPassword());
+
+            return UserMapper.toUserDto(user);
+        }
+
+        throw new NotFoundException("No user found.");
     }
 }

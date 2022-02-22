@@ -4,6 +4,7 @@ import com.example.demo.UserService;
 import com.example.demo.entity.User;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.request.CreateUserReq;
+import com.example.demo.model.request.UpdateUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +44,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser() {
-        return null;
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UpdateUserReq req, @PathVariable int id) {
+        UserDto user = userService.updateUser(req, id);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
