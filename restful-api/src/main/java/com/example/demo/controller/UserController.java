@@ -5,11 +5,17 @@ import com.example.demo.entity.User;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.request.CreateUserReq;
 import com.example.demo.model.request.UpdateUserReq;
+import com.example.demo.model.request.UploadForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 @RestController
@@ -17,6 +23,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    private static String UPLOAD_DIR = System.getProperty("user.home") + "/upload";
 
     //    @RequestMapping(value = "", method = RequestMethod.GET)
     @GetMapping("")
@@ -53,5 +61,29 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("Delete completed.");
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadFile(@ModelAttribute("uploadForm") UploadForm form) {
+        File uploadDir = new File(UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        MultipartFile fileData = form.getFileData();
+        String name = fileData.getOriginalFilename();
+        if (name != null && name.length() > 0) {
+            try {
+                File serverFile = new File(UPLOAD_DIR + "/" + name);
+                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+                stream.write(fileData.getBytes());
+                stream.close();
+                return ResponseEntity.ok("/file/" + name);
+            } catch (Exception ex) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error when uploading");
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
     }
 }
