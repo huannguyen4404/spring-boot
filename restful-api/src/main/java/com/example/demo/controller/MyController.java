@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyController {
     @RequestMapping(value = "hello-world", method = RequestMethod.GET)
     public ResponseEntity<?> helloWord() {
-        User user = new User(1, "Henry", "henry@gmail.com", "0964912397", "henry.jpg", "miemie");
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+//        User user = new User(1, "Henry", "henry@gmail.com", "0964912397", "henry.jpg", "miemie");
+
+        return ResponseEntity.status(HttpStatus.OK).body("ok");
     }
 }
